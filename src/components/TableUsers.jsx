@@ -1,14 +1,37 @@
 import { useEffect, useState } from 'react';
+import _ from 'lodash';
 
 import Table from 'react-bootstrap/Table';
 import ReactPaginate from 'react-paginate';
 
-import fetchAllUser from '@/services/UserService';
+import { fetchAllUser } from '@/services/UserService';
+import ModalAddNew from '@/components/ModalAddNew';
+import ModalEditUser from '@/components/ModalEditUser';
 
 function TableUsers(props) {
     const [listUsers, setListUsers] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+
+    const [isShowModalAddNew, setIsShowModalAddNew] = useState(false);
+    const [isShowModalEditUser, setIsShowModalEditUser] = useState(false);
+    const [dataUserEdit, setDataUserEdit] = useState({});
+
+    const handleClose = () => {
+        setIsShowModalAddNew(false);
+        setIsShowModalEditUser(false);
+    };
+
+    const handleUpdateTable = (user) => {
+        setListUsers([user, ...listUsers]);
+    };
+
+    const handleEditUserFromModal = (user) => {
+        let cloneListUsers = _.cloneDeep(listUsers);
+        let index = listUsers.findIndex((item) => item.id === user.id);
+        cloneListUsers[index].first_name = user.first_name;
+        setListUsers(cloneListUsers);
+    };
 
     useEffect(() => {
         // call API
@@ -25,12 +48,24 @@ function TableUsers(props) {
         }
     }
 
-    function handlePageClick(event) {
+    const handlePageClick = (event) => {
         getUsers(event.selected + 1);
-    }
+    };
+
+    const handleEditUser = (user) => {
+        setDataUserEdit(user);
+        setIsShowModalEditUser(true);
+    };
 
     return (
         <>
+            <div className="app-container my-3 d-flex justify-content-between">
+                <p>List Users:</p>
+                <button className="btn btn-success" onClick={() => setIsShowModalAddNew(true)}>
+                    Add new user
+                </button>
+            </div>
+
             <Table striped bordered hover>
                 <thead>
                     <tr>
@@ -38,6 +73,7 @@ function TableUsers(props) {
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -50,6 +86,12 @@ function TableUsers(props) {
                                     <td>{item.email}</td>
                                     <td>{item.first_name}</td>
                                     <td>{item.last_name}</td>
+                                    <td>
+                                        <button className="btn btn-warning me-2" onClick={() => handleEditUser(item)}>
+                                            Edit
+                                        </button>
+                                        <button className="btn btn-danger">Delete</button>
+                                    </td>
                                 </tr>
                             );
                         })}
@@ -74,6 +116,15 @@ function TableUsers(props) {
                 breakLinkClassName="page-link"
                 containerClassName="pagination"
                 activeClassName="active"
+            />
+
+            <ModalAddNew show={isShowModalAddNew} handleClose={handleClose} handleUpdateTable={handleUpdateTable} />
+
+            <ModalEditUser
+                show={isShowModalEditUser}
+                handleClose={handleClose}
+                dataUserEdit={dataUserEdit}
+                handleEditUserFromModal={handleEditUserFromModal}
             />
         </>
     );
