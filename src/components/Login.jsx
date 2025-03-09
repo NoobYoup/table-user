@@ -1,11 +1,13 @@
 import '@/components/Login.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { loginApi } from '@/services/UserService';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '@/context/UserContext';
 
 function Login() {
     const navigate = useNavigate();
+    const { loginContext } = useContext(UserContext);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,10 +28,10 @@ function Login() {
             return;
         }
         setLoadingApi(true);
-        let res = await loginApi(email, password);
+        let res = await loginApi(email.trim(), password);
 
         if (res && res.token) {
-            localStorage.setItem('token', res.token);
+            loginContext(email, res.token);
             navigate('/');
         } else {
             if (res && res.status === 400) {
@@ -37,6 +39,16 @@ function Login() {
             }
         }
         setLoadingApi(false);
+    };
+
+    const handleGoBack = () => {
+        navigate('/');
+    };
+
+    const handlePressEnter = (event) => {
+        if (event && event.key === 'Enter') {
+            handleLogin();
+        }
     };
 
     return (
@@ -55,6 +67,7 @@ function Login() {
                     placeholder="Password"
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
+                    onKeyDown={(event) => handlePressEnter(event)}
                 />
                 <i
                     className={isShowPassword === true ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash'}
@@ -71,7 +84,7 @@ function Login() {
             </button>
             <div className="back">
                 <i className="fa-solid fa-arrow-left me-2"></i>
-                <span>Go back</span>
+                <span onClick={() => handleGoBack()}>Go back</span>
             </div>
         </div>
     );

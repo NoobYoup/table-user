@@ -183,7 +183,7 @@ function TableUsers(props) {
 
     return (
         <>
-            <div className="app-container my-3 d-flex justify-content-between">
+            <div className="app-container col-12 my-3 d-sm-flex justify-content-between">
                 <h5>List Users:</h5>
                 <div>
                     <label htmlFor="import" className="btn btn-info">
@@ -217,57 +217,68 @@ function TableUsers(props) {
                 />
             </div>
 
-            <Table striped bordered hover>
-                <thead>
-                    <tr>
-                        <th className="sort-header d-flex justify-content-between">
-                            <span>ID</span>
-                            <span>
-                                <i className="fa-solid fa-arrow-down-long" onClick={() => handleSort('desc', 'id')}></i>
-                                <i className="fa-solid fa-arrow-up-long" onClick={() => handleSort('asc', 'id')}></i>
-                            </span>
-                        </th>
-                        <th className="sort-header">Email</th>
-                        <th className="sort-header d-flex justify-content-between">
-                            <span>First Name</span>
-                            <span>
-                                <i
-                                    className="fa-solid fa-arrow-down-long"
-                                    onClick={() => handleSort('desc', 'first_name')}
-                                ></i>
-                                <i
-                                    className="fa-solid fa-arrow-up-long"
-                                    onClick={() => handleSort('asc', 'first_name')}
-                                ></i>
-                            </span>
-                        </th>
-                        <th className="sort-header">Last Name</th>
-                        <th className="sort-header">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {listUsers &&
-                        listUsers.length > 0 &&
-                        listUsers.map((item, index) => {
-                            return (
-                                <tr key={`users-${index}`}>
-                                    <td>{item.id}</td>
-                                    <td>{item.email}</td>
-                                    <td>{item.first_name}</td>
-                                    <td>{item.last_name}</td>
-                                    <td>
-                                        <button className="btn btn-warning me-2" onClick={() => handleEditUser(item)}>
-                                            Edit
-                                        </button>
-                                        <button className="btn btn-danger" onClick={() => handleDeleteUser(item)}>
-                                            Delete
-                                        </button>
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                </tbody>
-            </Table>
+            <div className="customize-table">
+                <Table striped bordered hover>
+                    <thead>
+                        <tr>
+                            <th className="sort-header d-flex justify-content-between">
+                                <span>ID</span>
+                                <span>
+                                    <i
+                                        className="fa-solid fa-arrow-down-long"
+                                        onClick={() => handleSort('desc', 'id')}
+                                    ></i>
+                                    <i
+                                        className="fa-solid fa-arrow-up-long"
+                                        onClick={() => handleSort('asc', 'id')}
+                                    ></i>
+                                </span>
+                            </th>
+                            <th className="sort-header">Email</th>
+                            <th className="sort-header d-flex justify-content-between">
+                                <span>First Name</span>
+                                <span>
+                                    <i
+                                        className="fa-solid fa-arrow-down-long"
+                                        onClick={() => handleSort('desc', 'first_name')}
+                                    ></i>
+                                    <i
+                                        className="fa-solid fa-arrow-up-long"
+                                        onClick={() => handleSort('asc', 'first_name')}
+                                    ></i>
+                                </span>
+                            </th>
+                            <th className="sort-header">Last Name</th>
+                            <th className="sort-header">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listUsers &&
+                            listUsers.length > 0 &&
+                            listUsers.map((item, index) => {
+                                return (
+                                    <tr key={`users-${index}`}>
+                                        <td>{item.id}</td>
+                                        <td>{item.email}</td>
+                                        <td>{item.first_name}</td>
+                                        <td>{item.last_name}</td>
+                                        <td>
+                                            <button
+                                                className="btn btn-warning me-2"
+                                                onClick={() => handleEditUser(item)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button className="btn btn-danger" onClick={() => handleDeleteUser(item)}>
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                    </tbody>
+                </Table>
+            </div>
 
             <ReactPaginate
                 breakLabel="..."

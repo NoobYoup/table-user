@@ -4,8 +4,15 @@ import App from './App.jsx';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import { UserProvider } from './context/UserContext.jsx';
+import { BrowserRouter } from 'react-router-dom';
+
 createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <App />
+        <UserProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </UserProvider>
     </StrictMode>,
 );
